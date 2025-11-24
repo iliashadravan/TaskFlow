@@ -1,0 +1,46 @@
+name: Version Checker
+
+on:
+  schedule:
+    - cron: "0 * * * *"  
+  workflow_dispatch:      
+
+jobs:
+  check-versions:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer
+
+      - name: Read Composer Version
+        run: |
+          CURRENT_COMPOSER=$(composer --version | awk '{print $3}')
+          echo "COMPOSER_VERSION=$CURRENT_COMPOSER" >> $GITHUB_ENV
+
+      - name: Read Laravel Version
+        run: |
+          CURRENT_LARAVEL=$(php artisan --version | awk '{print $3}')
+          echo "LARAVEL_VERSION=$CURRENT_LARAVEL" >> $GITHUB_ENV
+
+      - name: Update version log file
+        run: |
+          echo "Composer: $COMPOSER_VERSION" > versions.txt
+          echo "Laravel: $LARAVEL_VERSION" >> versions.txt
+
+      - name: Commit changes only if changed
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+
+          git add versions.txt
+          git diff --cached --quiet || git commit -m "Auto-update version info"
+          git push
