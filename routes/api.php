@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ProjectMemberController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthController::class, 'register']);
@@ -19,6 +20,9 @@ Route::post('/login', [AuthController::class, 'login']);
          Route::get('/{project}', [ProjectController::class, 'show']);
          Route::post('/{project}/update', [ProjectController::class, 'update']);
          Route::post('/{project}/delete', [ProjectController::class, 'destroy']);
+         Route::post('/{project}/add-user', [ProjectMemberController::class, 'addUser']);
+         Route::post('/{project}/remove-user', [ProjectMemberController::class, 'removeUser']);
+         Route::get('/{project}/members', [ProjectMemberController::class, 'members']);
      });
  });
 
