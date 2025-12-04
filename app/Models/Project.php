@@ -24,5 +24,24 @@ class Project extends Model
             ->withPivot('role')
             ->withTimestamps();
     }
+    public function projects()
+    {
+        return $this->hasMany(Project::class);
+    }
 
+    /**
+     * تسک‌هایی که کاربر ساخته (owner)
+     */
+    public function createdTasks()
+    {
+        return $this->hasMany(Task::class, 'creator_id');
+    }
+
+    /**
+     * تسک‌هایی که به کاربر Assign شده
+     */
+    public function assignedTasks()
+    {
+        return $this->hasMany(Task::class, 'assigned_to');
+    }
 }
