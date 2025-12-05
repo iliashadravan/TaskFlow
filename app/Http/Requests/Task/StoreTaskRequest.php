@@ -2,16 +2,19 @@
 
 namespace App\Http\Requests\Task;
 
-use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTaskRequest extends FormRequest
+use App\Enums\PriorityEnum;
+use App\Enums\StatusEnum;
+use App\Http\Requests\Request;
+
+class StoreTaskRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +25,13 @@ class StoreTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title'       => 'required|string|max:255',
+            'description' => 'nullable|string',
+
+            'assigned_to' => 'nullable|exists:users,id',
+
+            'status'      => 'nullable|in:' . implode(',', StatusEnum::values()),
+            'priority'    => 'nullable|in:' . implode(',', PriorityEnum::values()),
         ];
     }
 }
