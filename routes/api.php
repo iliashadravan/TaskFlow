@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectMemberController;
 use App\Http\Controllers\TaskController;
@@ -30,6 +31,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post('', [TaskController::class, 'store']);
             Route::post('/{task}/update', [TaskController::class, 'update']);
             Route::post('/{task}/delete', [TaskController::class, 'destroy']);
+            Route::get('/{task}/comments', [CommentController::class, 'index']);
+            Route::post('/{task}/comments', [CommentController::class, 'store']);
+            Route::delete('/comments/{comment}', [CommentController::class, 'destroy']);
+
         });
     });
 });
